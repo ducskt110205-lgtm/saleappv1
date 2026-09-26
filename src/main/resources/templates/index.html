@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bán hàng trực tuyến</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<header>
+    <h1>BÁN HÀNG TRỰC TUYẾN</h1>
+</header>
+
+<nav>
+    <a th:href="@{/products}">Tất cả</a>
+    <a th:href="@{/products(categoryId=1)}">Điện thoại di động</a>
+    <a th:href="@{/products(categoryId=2)}">Máy tính bảng</a>
+</nav>
+
+<main>
+    <h2>Chào mừng đến với cửa hàng</h2>
+    <p>Chọn một danh mục để xem sản phẩm.</p>
+</main>
+
+</body>
+</html>

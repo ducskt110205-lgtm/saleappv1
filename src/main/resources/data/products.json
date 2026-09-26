@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "name": "iPhone 15",
+    "description": "Điện thoại Apple iPhone 15",
+    "price": 20000000,
+    "image": "/images/iphone15.jpg",
+    "categoryId": 1
+  },
+  {
+    "id": 2,
+    "name": "Samsung Galaxy S24",
+    "description": "Điện thoại Samsung Galaxy S24",
+    "price": 18000000,
+    "image": "/images/s24.jpg",
+    "categoryId": 1
+  },
+  {
+    "id": 3,
+    "name": "iPad Air",
+    "description": "Máy tính bảng Apple iPad Air",
+    "price": 16000000,
+    "image": "/images/ipadair.jpg",
+    "categoryId": 2
+  },
+  {
+    "id": 4,
+    "name": "Samsung Galaxy Tab",
+    "description": "Máy tính bảng Samsung",
+    "price": 12000000,
+    "image": "/images/galaxytab.jpg",
+    "categoryId": 2
+  }
+]
