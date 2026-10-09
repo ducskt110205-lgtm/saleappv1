@@ -1,68 +1,85 @@
 package com.example.saleappv1.Service;
 
+import java.util.List;
+import java.util.Locale;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.saleappv1.Model.Category;
 import com.example.saleappv1.Model.Product;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.util.List;
+import com.example.saleappv1.repository.CategoryRepository;
+import com.example.saleappv1.repository.ProductRepository;
 
 @Service
+@Transactional
 public class ProductService {
 
-	private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    public List<Product> getAllProducts() {
-        try {
-            ClassPathResource resource =
-                    new ClassPathResource("data/products.json");
-
-            return objectMapper.readValue(
-                    resource.getInputStream(),
-                    new TypeReference<List<Product>>() {}
-            );
-
-        } catch (IOException e) {
-            throw new RuntimeException("Không thể đọc products.json", e);
-        }
+    public ProductService(
+            ProductRepository productRepository,
+            CategoryRepository categoryRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
+    // Lấy sản phẩm từ MySQL
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    // Lấy danh mục từ MySQL
     public List<Category> getAllCategories() {
-        try {
-            ClassPathResource resource =
-                    new ClassPathResource("data/categories.json");
-
-            return objectMapper.readValue(
-                    resource.getInputStream(),
-                    new TypeReference<List<Category>>() {}
-            );
-
-        } catch (IOException e) {
-            throw new RuntimeException("Không thể đọc categories.json", e);
-        }
+        return categoryRepository.findAll();
     }
 
     public Product getProductById(Integer id) {
-
-        return getAllProducts()
-                .stream()
-                .filter(product -> product.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return productRepository.findById(id).orElse(null);
     }
 
     public Category getCategoryById(Integer id) {
-
-        return getAllCategories()
-                .stream()
-                .filter(category -> category.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        if (id == null) {
+            return null;
+        }
+        return categoryRepository.findById(id).orElse(null);
     }
 
+    // Thêm sản phẩm
+    public void addProduct(Product product) {
+        Category category = validateProduct(product);
+
+        Product newProduct = new Product();
+        copyProductData(product, newProduct, category);
+
+        productRepository.save(newProduct);
+    }
+
+    // Sửa sản phẩm
+    public void updateProduct(Product product) {
+        Product existingProduct = productRepository
+                .findById(product.getId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Sản phẩm không tồn tại."));
+
+        Category category = validateProduct(product);
+        copyProductData(product, existingProduct, category);
+
+        productRepository.save(existingProduct);
+    }
+
+    // Xóa sản phẩm
+    public void deleteProductById(Integer id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Sản phẩm không tồn tại."));
+
+        productRepository.delete(product);
+        productRepository.flush();
+    }
+
+    // Giữ chức năng tìm kiếm và lọc đang có
     public List<Product> filterProducts(
             Integer categoryId,
             String keyword,
@@ -72,24 +89,74 @@ public class ProductService {
         return getAllProducts()
                 .stream()
                 .filter(product ->
-                        categoryId == null ||
-                        product.getCategoryId().equals(categoryId))
+                        categoryId == null
+                        || categoryId.equals(product.getCategoryId()))
 
                 .filter(product ->
-                        keyword == null ||
-                        keyword.isBlank() ||
-                        product.getName()
-                                .toLowerCase()
-                                .contains(keyword.toLowerCase()))
+                        keyword == null
+                        || keyword.isBlank()
+                        || product.getName()
+                                .toLowerCase(Locale.ROOT)
+                                .contains(keyword.trim()
+                                        .toLowerCase(Locale.ROOT)))
 
                 .filter(product ->
-                        fromPrice == null ||
-                        product.getPrice() >= fromPrice)
+                        fromPrice == null
+                        || product.getPrice() >= fromPrice)
 
                 .filter(product ->
-                        toPrice == null ||
-                        product.getPrice() <= toPrice)
+                        toPrice == null
+                        || product.getPrice() <= toPrice)
 
                 .toList();
+    }
+
+    // Kiểm tra dữ liệu trước khi lưu
+    private Category validateProduct(Product product) {
+        if (product.getName() == null
+                || product.getName().isBlank()) {
+            throw new IllegalArgumentException(
+                    "Tên sản phẩm không được để trống.");
+        }
+
+        if (product.getName().trim().length() > 255) {
+            throw new IllegalArgumentException(
+                    "Tên sản phẩm không được vượt quá 255 ký tự.");
+        }
+
+        if (product.getPrice() == null
+                || !Double.isFinite(product.getPrice())
+                || product.getPrice() < 0) {
+            throw new IllegalArgumentException(
+                    "Giá sản phẩm phải là số không âm.");
+        }
+
+        if (product.getImage() != null
+                && product.getImage().length() > 255) {
+            throw new IllegalArgumentException(
+                    "Đường dẫn ảnh không được vượt quá 255 ký tự.");
+        }
+
+        if (product.getCategoryId() == null) {
+            throw new IllegalArgumentException(
+                    "Vui lòng chọn danh mục.");
+        }
+
+        return categoryRepository.findById(product.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Danh mục được chọn không tồn tại."));
+    }
+
+    // Sao chép các trường được phép cập nhật
+    private void copyProductData(
+            Product source,
+            Product target,
+            Category category) {
+
+        target.setName(source.getName().trim());
+        target.setDescription(source.getDescription());
+        target.setPrice(source.getPrice());
+        target.setImage(source.getImage());
+        target.setCategory(category);
     }
 }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý danh mục</title>
+</head>
+<body>
+    <h1>Danh sách danh mục</h1>
+
+    <p th:if="${success}"
+       th:text="${success}"
+       style="color: green;"></p>
+
+    <p th:if="${error}"
+       th:text="${error}"
+       style="color: red;"></p>
+
+    <p>
+        <a th:href="@{/categories/add}">Thêm danh mục mới</a>
+        |
+        <a th:href="@{/}">Trang chủ</a>
+    </p>
+
+    <table border="1" cellpadding="10"
+           style="border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên danh mục</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:if="${#lists.isEmpty(categories)}">
+                <td colspan="3">Chưa có danh mục nào.</td>
+            </tr>
+
+            <tr th:each="category : ${categories}">
+                <td th:text="${category.id}"></td>
+                <td th:text="${category.name}"></td>
+
+                <td>
+                    <a th:href="@{/categories/edit/{id}
+                        (id=${category.id})}">
+                        Sửa
+                    </a>
+
+                    <form th:action="@{/categories/delete/{id}
+                          (id=${category.id})}"
+                          method="post"
+                          style="display: inline;"
+                          onsubmit="return confirm('Bạn chắc chắn muốn xóa danh mục này?');">
+                        <button type="submit">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

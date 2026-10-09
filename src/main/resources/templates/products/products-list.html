@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý sản phẩm</title>
+</head>
+<body>
+    <h1>Danh sách sản phẩm</h1>
+
+    <p th:if="${success}" th:text="${success}"
+       style="color: green;"></p>
+
+    <p th:if="${error}" th:text="${error}"
+       style="color: red;"></p>
+
+    <p>
+        <a th:href="@{/products/add}">Thêm sản phẩm</a>
+        |
+        <a th:href="@{/categories}">Quản lý danh mục</a>
+        |
+        <a th:href="@{/}">Trang chủ</a>
+    </p>
+
+    <form th:action="@{/products}" method="get">
+        <input type="text" name="keyword"
+               th:value="${keyword}"
+               placeholder="Tên sản phẩm">
+
+        <select name="categoryId">
+            <option value="">Tất cả danh mục</option>
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:text="${category.name}"
+                    th:selected="${category.id == categoryId}">
+            </option>
+        </select>
+
+        <input type="number" name="fromPrice"
+               th:value="${fromPrice}"
+               min="0" step="0.01" placeholder="Giá từ">
+
+        <input type="number" name="toPrice"
+               th:value="${toPrice}"
+               min="0" step="0.01" placeholder="Giá đến">
+
+        <button type="submit">Tìm kiếm</button>
+        <a th:href="@{/products}">Bỏ lọc</a>
+    </form>
+
+    <br>
+
+    <table border="1" cellpadding="10"
+           style="border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Danh mục</th>
+                <th>Mô tả</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:if="${#lists.isEmpty(products)}">
+                <td colspan="6">Không có sản phẩm.</td>
+            </tr>
+
+            <tr th:each="product : ${products}">
+                <td th:text="${product.id}"></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.price}"></td>
+
+                <td th:text="${product.category != null
+                    ? product.category.name : 'Chưa có danh mục'}">
+                </td>
+
+                <td th:text="${product.description}"></td>
+
+                <td>
+                    <a th:href="@{/products/edit/{id}(id=${product.id})}">
+                        Sửa
+                    </a>
+
+                    <form th:action="@{/products/delete/{id}(id=${product.id})}"
+                          method="post"
+                          style="display: inline;"
+                          onsubmit="return confirm('Bạn chắc chắn muốn xóa sản phẩm này?');">
+                        <button type="submit">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

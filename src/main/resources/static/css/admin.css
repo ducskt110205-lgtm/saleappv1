@@ -1,0 +1,301 @@
+:root {
+    --red: #a61b32;
+    --red-dark: #801328;
+    --red-light: #fff1f3;
+    --text: #292329;
+    --border: #e8dce0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #fffafb;
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* Thanh điều hướng */
+.topbar {
+    background: var(--red);
+    color: white;
+    padding: 14px 24px;
+}
+
+.topbar-inner {
+    max-width: 1100px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.brand {
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.topbar nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.topbar nav a {
+    color: white;
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: 5px;
+}
+
+.topbar nav a:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+/* Nội dung căn giữa */
+.page {
+    width: calc(100% - 40px);
+    max-width: 1000px;
+    margin: 55px auto;
+}
+
+.page-category {
+    max-width: 760px;
+}
+
+.page-form {
+    max-width: 560px;
+}
+
+h1 {
+    margin: 0 0 22px;
+    font-size: 30px;
+    line-height: 1.3;
+    color: #391a22;
+}
+
+a {
+    color: var(--red);
+}
+
+/* Nút bấm */
+button,
+.btn {
+    display: inline-block;
+    padding: 9px 17px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background: var(--red);
+    color: white;
+    font: inherit;
+    font-weight: 600;
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+button:hover,
+.btn:hover {
+    background: var(--red-dark);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Liên kết thêm mới phía trên bảng */
+.page > p > a:first-child[href$="/add"] {
+    display: inline-block;
+    padding: 9px 17px;
+    border-radius: 5px;
+    background: var(--red);
+    color: white;
+    text-decoration: none;
+}
+
+.page > p > a:first-child[href$="/add"]:hover {
+    background: var(--red-dark);
+}
+
+/* Bảng dữ liệu */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+    background: white;
+}
+
+th,
+td {
+    padding: 13px 15px;
+    text-align: left;
+    vertical-align: middle;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    background: var(--red-dark);
+    color: white;
+    font-weight: 600;
+}
+
+tbody tr:nth-child(even) {
+    background: #fff6f7;
+}
+
+tbody tr:hover {
+    background: var(--red-light);
+}
+
+td {
+    overflow-wrap: anywhere;
+}
+
+td:last-child {
+    white-space: nowrap;
+}
+
+/* Nút sửa và xóa */
+td a[href*="/edit/"] {
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1px solid #b9d5ca;
+    border-radius: 4px;
+    background: #edf7f1;
+    color: #225f46;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+td a[href*="/edit/"]:hover {
+    background: #dcefe3;
+}
+
+td form button {
+    padding: 6px 12px;
+    margin-left: 5px;
+    background: var(--red);
+    font-size: 14px;
+}
+
+/* Form thêm và sửa */
+.page-form > form {
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+}
+
+label {
+    display: inline-block;
+    margin-bottom: 7px;
+    font-weight: 600;
+}
+
+input,
+select,
+textarea {
+    padding: 10px 12px;
+    border: 1px solid #cfbdc3;
+    border-radius: 5px;
+    background: white;
+    color: var(--text);
+    font: inherit;
+}
+
+.page-form input,
+.page-form select,
+.page-form textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #e8a6b3;
+    outline-offset: 2px;
+    border-color: var(--red);
+}
+
+.page-form form > a {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 9px 17px;
+    border-radius: 5px;
+    background: #ece7e9;
+    color: #443c40;
+    text-decoration: none;
+}
+
+.page-form form > a:hover {
+    background: #ded5d9;
+}
+
+/* Thanh tìm kiếm sản phẩm */
+.page > form[method="get"] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+}
+
+.page > form[method="get"] input,
+.page > form[method="get"] select {
+    flex: 1 1 150px;
+    min-width: 0;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 3px solid #d78899;
+    outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+    .topbar-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .page {
+        margin-top: 30px;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    .page-form > form {
+        padding: 20px;
+    }
+
+    th,
+    td {
+        padding: 10px;
+    }
+}

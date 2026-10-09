@@ -1,13 +1,41 @@
 package com.example.saleappv1.Model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "products")
 public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String name;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
     private Double price;
+
     private String image;
+
+    @Column(name = "category_id")
     private Integer categoryId;
+
+    @ManyToOne
+    @JoinColumn(
+        name = "category_id",
+        insertable = false,
+        updatable = false
+    )
+    private Category category;
 
     public Product() {
     }
@@ -68,5 +96,15 @@ public class Product {
 
     public void setCategoryId(Integer categoryId) {
         this.categoryId = categoryId;
+        this.category = null;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+        this.categoryId = category != null ? category.getId() : null;
     }
 }

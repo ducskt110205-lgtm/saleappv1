@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm sản phẩm</title>
+</head>
+<body>
+    <h1>Thêm sản phẩm</h1>
+
+    <p th:if="${error}" th:text="${error}"
+       style="color: red;"></p>
+
+    <p th:if="${#lists.isEmpty(categories)}">
+        Bạn cần
+        <a th:href="@{/categories/add}">thêm danh mục</a>
+        trước khi thêm sản phẩm.
+    </p>
+
+    <form th:action="@{/products/add}"
+          th:object="${product}"
+          method="post">
+
+        <p>
+            <label for="name">Tên sản phẩm:</label><br>
+            <input type="text" id="name"
+                   th:field="*{name}"
+                   maxlength="255" required>
+        </p>
+
+        <p>
+            <label for="price">Giá:</label><br>
+            <input type="number" id="price"
+                   th:field="*{price}"
+                   min="0" step="0.01" required>
+        </p>
+
+        <p>
+            <label for="description">Mô tả:</label><br>
+            <textarea id="description"
+                      th:field="*{description}"
+                      rows="4" cols="40"></textarea>
+        </p>
+
+        <p>
+            <label for="image">Đường dẫn ảnh:</label><br>
+            <input type="text" id="image"
+                   th:field="*{image}"
+                   maxlength="255">
+        </p>
+
+        <p>
+            <label for="categoryId">Danh mục:</label><br>
+            <select id="categoryId"
+                    th:field="*{categoryId}" required>
+                <option value="">-- Chọn danh mục --</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.id}"
+                        th:text="${category.name}">
+                </option>
+            </select>
+        </p>
+
+        <button type="submit"
+                th:disabled="${#lists.isEmpty(categories)}">
+            Lưu
+        </button>
+
+        <a th:href="@{/products}">Hủy</a>
+    </form>
+</body>
+</html>
