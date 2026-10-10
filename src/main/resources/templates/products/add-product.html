@@ -2,54 +2,59 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Thêm sản phẩm</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-    <h1>Thêm sản phẩm</h1>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <a class="brand" th:href="@{/products}">
+                Quản Lý Bán Hàng
+            </a>
+            <nav aria-label="Điều hướng chính">
+                <a th:href="@{/categories}">Danh mục</a>
+                <a th:href="@{/products}">Sản phẩm</a>
+                <a th:href="@{/}">Trang chủ</a>
+            </nav>
+        </div>
+    </header>
 
-    <p th:if="${error}" th:text="${error}"
-       style="color: red;"></p>
+    <main class="page page-form">
+        <a class="back-link" th:href="@{/products}">
+            ← Quay lại danh sách
+        </a>
 
-    <p th:if="${#lists.isEmpty(categories)}">
-        Bạn cần
-        <a th:href="@{/categories/add}">thêm danh mục</a>
-        trước khi thêm sản phẩm.
-    </p>
+        <h1>Thêm sản phẩm mới</h1>
+        <p class="muted">Nhập thông tin sản phẩm. Các mục có * là bắt buộc.</p>
 
-    <form th:action="@{/products/add}"
-          th:object="${product}"
-          method="post">
+        <p class="notice notice-error"
+           th:if="${error}" th:text="${error}" role="alert"></p>
 
-        <p>
-            <label for="name">Tên sản phẩm:</label><br>
+        <p class="notice notice-error"
+           th:if="${#lists.isEmpty(categories)}">
+            Chưa có danh mục.
+            <a th:href="@{/categories/add}">Tạo danh mục trước</a>
+            để thêm sản phẩm.
+        </p>
+
+        <form th:action="@{/products/add}"
+              th:object="${product}"
+              method="post">
+
+            <label for="name">Tên sản phẩm *</label>
             <input type="text" id="name"
                    th:field="*{name}"
+                   placeholder="Ví dụ: Điện thoại Samsung"
                    maxlength="255" required>
-        </p>
 
-        <p>
-            <label for="price">Giá:</label><br>
+            <label for="price">Giá bán (VNĐ) *</label>
             <input type="number" id="price"
                    th:field="*{price}"
+                   placeholder="Ví dụ: 5000000"
                    min="0" step="0.01" required>
-        </p>
 
-        <p>
-            <label for="description">Mô tả:</label><br>
-            <textarea id="description"
-                      th:field="*{description}"
-                      rows="4" cols="40"></textarea>
-        </p>
-
-        <p>
-            <label for="image">Đường dẫn ảnh:</label><br>
-            <input type="text" id="image"
-                   th:field="*{image}"
-                   maxlength="255">
-        </p>
-
-        <p>
-            <label for="categoryId">Danh mục:</label><br>
+            <label for="categoryId">Danh mục *</label>
             <select id="categoryId"
                     th:field="*{categoryId}" required>
                 <option value="">-- Chọn danh mục --</option>
@@ -58,14 +63,25 @@
                         th:text="${category.name}">
                 </option>
             </select>
-        </p>
 
-        <button type="submit"
-                th:disabled="${#lists.isEmpty(categories)}">
-            Lưu
-        </button>
+            <label for="description">Mô tả sản phẩm</label>
+            <textarea id="description"
+                      th:field="*{description}"
+                      rows="4"
+                      placeholder="Nhập đặc điểm, thông số sản phẩm..."></textarea>
 
-        <a th:href="@{/products}">Hủy</a>
-    </form>
+            <label for="image">Đường dẫn ảnh</label>
+            <input type="text" id="image"
+                   th:field="*{image}"
+                   placeholder="Nhập URL hoặc đường dẫn ảnh"
+                   maxlength="255">
+
+            <button type="submit"
+                    th:disabled="${#lists.isEmpty(categories)}">
+                Lưu sản phẩm
+            </button>
+            <a th:href="@{/products}">Hủy</a>
+        </form>
+    </main>
 </body>
 </html>

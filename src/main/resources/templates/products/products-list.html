@@ -2,96 +2,131 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quản lý sản phẩm</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-    <h1>Danh sách sản phẩm</h1>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <a class="brand" th:href="@{/products}">
+                Quản Lý Bán Hàng
+            </a>
+            <nav aria-label="Điều hướng chính">
+                <a th:href="@{/categories}">Danh mục</a>
+                <a th:href="@{/products}" aria-current="page">Sản phẩm</a>
+                <a th:href="@{/}">Trang chủ</a>
+            </nav>
+        </div>
+    </header>
 
-    <p th:if="${success}" th:text="${success}"
-       style="color: green;"></p>
+    <main class="page">
+        <div class="product-heading">
+            <div>
+                <h1>Danh sách sản phẩm</h1>
+                <p class="muted">Quản lý thông tin và giá bán sản phẩm.</p>
+            </div>
+            <a class="btn" th:href="@{/products/add}">
+                + Thêm sản phẩm
+            </a>
+        </div>
 
-    <p th:if="${error}" th:text="${error}"
-       style="color: red;"></p>
+        <p class="notice notice-success"
+           th:if="${success}" th:text="${success}" role="status"></p>
 
-    <p>
-        <a th:href="@{/products/add}">Thêm sản phẩm</a>
-        |
-        <a th:href="@{/categories}">Quản lý danh mục</a>
-        |
-        <a th:href="@{/}">Trang chủ</a>
-    </p>
+        <p class="notice notice-error"
+           th:if="${error}" th:text="${error}" role="alert"></p>
 
-    <form th:action="@{/products}" method="get">
-        <input type="text" name="keyword"
-               th:value="${keyword}"
-               placeholder="Tên sản phẩm">
+        <form th:action="@{/products}" method="get">
+            <input type="search" name="keyword"
+                   th:value="${keyword}"
+                   placeholder="Tìm tên sản phẩm..."
+                   aria-label="Tên sản phẩm">
 
-        <select name="categoryId">
-            <option value="">Tất cả danh mục</option>
-            <option th:each="category : ${categories}"
-                    th:value="${category.id}"
-                    th:text="${category.name}"
-                    th:selected="${category.id == categoryId}">
-            </option>
-        </select>
+            <select name="categoryId" aria-label="Danh mục">
+                <option value="">Tất cả danh mục</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.id}"
+                        th:text="${category.name}"
+                        th:selected="${category.id == categoryId}">
+                </option>
+            </select>
 
-        <input type="number" name="fromPrice"
-               th:value="${fromPrice}"
-               min="0" step="0.01" placeholder="Giá từ">
+            <input type="number" name="fromPrice"
+                   th:value="${fromPrice}"
+                   min="0" step="0.01"
+                   placeholder="Giá từ" aria-label="Giá từ">
 
-        <input type="number" name="toPrice"
-               th:value="${toPrice}"
-               min="0" step="0.01" placeholder="Giá đến">
+            <input type="number" name="toPrice"
+                   th:value="${toPrice}"
+                   min="0" step="0.01"
+                   placeholder="Giá đến" aria-label="Giá đến">
 
-        <button type="submit">Tìm kiếm</button>
-        <a th:href="@{/products}">Bỏ lọc</a>
-    </form>
+            <button type="submit">Tìm kiếm</button>
+            <a th:href="@{/products}">Bỏ lọc</a>
+        </form>
 
-    <br>
+        <p class="muted">
+            Có <strong th:text="${#lists.size(products)}">0</strong>
+            sản phẩm trong kết quả.
+        </p>
 
-    <table border="1" cellpadding="10"
-           style="border-collapse: collapse;">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Tên sản phẩm</th>
-                <th>Giá</th>
-                <th>Danh mục</th>
-                <th>Mô tả</th>
-                <th>Thao tác</th>
-            </tr>
-        </thead>
+        <div class="table-wrap">
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Giá bán</th>
+                        <th>Danh mục</th>
+                        <th>Mô tả</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(products)}">
+                        <td colspan="6" class="empty-state">
+                            Không có sản phẩm phù hợp.
+                        </td>
+                    </tr>
 
-        <tbody>
-            <tr th:if="${#lists.isEmpty(products)}">
-                <td colspan="6">Không có sản phẩm.</td>
-            </tr>
+                    <tr th:each="product : ${products}">
+                        <td th:text="${product.id}"></td>
+                        <td>
+                            <strong th:text="${product.name}"></strong>
+                        </td>
 
-            <tr th:each="product : ${products}">
-                <td th:text="${product.id}"></td>
-                <td th:text="${product.name}"></td>
-                <td th:text="${product.price}"></td>
+                        <td class="product-price"
+                            th:text="${product.price != null
+                                ? #numbers.formatDecimal(
+                                    product.price, 1, 'POINT', 0, 'COMMA')
+                                    + ' đ'
+                                : 'Chưa có giá'}">
+                        </td>
 
-                <td th:text="${product.category != null
-                    ? product.category.name : 'Chưa có danh mục'}">
-                </td>
+                        <td th:text="${product.category != null
+                            ? product.category.name : 'Chưa có danh mục'}">
+                        </td>
 
-                <td th:text="${product.description}"></td>
+                        <td class="product-description"
+                            th:text="${product.description}"></td>
 
-                <td>
-                    <a th:href="@{/products/edit/{id}(id=${product.id})}">
-                        Sửa
-                    </a>
+                        <td>
+                            <a th:href="@{/products/edit/{id}(id=${product.id})}">
+                                Sửa
+                            </a>
 
-                    <form th:action="@{/products/delete/{id}(id=${product.id})}"
-                          method="post"
-                          style="display: inline;"
-                          onsubmit="return confirm('Bạn chắc chắn muốn xóa sản phẩm này?');">
-                        <button type="submit">Xóa</button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                            <form th:action="@{/products/delete/{id}(id=${product.id})}"
+                                  method="post"
+                                  style="display: inline;"
+                                  onsubmit="return confirm('Bạn chắc chắn muốn xóa sản phẩm này?');">
+                                <button type="submit">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
 </body>
 </html>

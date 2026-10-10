@@ -2,26 +2,242 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Bán hàng trực tuyến</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trang chủ | Quản lý bán hàng</title>
+
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+
+    <style>
+        .home-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .home-main {
+            flex: 1;
+            width: calc(100% - 40px);
+            max-width: 1100px;
+            margin: 45px auto;
+        }
+
+        .home-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 55px;
+            border: 1px solid #efd5dc;
+            border-radius: 14px;
+            background: linear-gradient(120deg, #fff0f3, #ffffff);
+        }
+
+        .home-tag {
+            display: inline-block;
+            margin-bottom: 18px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: #f8dce3;
+            color: #801328;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .home-hero h1 {
+            max-width: 650px;
+            margin: 0 0 18px;
+            font-size: clamp(30px, 4vw, 46px);
+            line-height: 1.2;
+            color: #571728;
+        }
+
+        .home-hero p {
+            max-width: 580px;
+            margin: 0 0 28px;
+            color: #71636a;
+            font-size: 17px;
+        }
+
+        .home-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .home-page .home-secondary {
+            border: 1px solid #a61b32;
+            background: white;
+            color: #a61b32;
+        }
+
+        .home-page .home-secondary:hover {
+            background: #fff1f3;
+        }
+
+        .home-section-title {
+            margin: 35px 0 18px;
+            font-size: 23px;
+            color: #391a22;
+        }
+
+        .home-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .home-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 26px;
+            border: 1px solid #e8dce0;
+            border-radius: 10px;
+            background: white;
+        }
+
+        .home-number {
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: #fff1f3;
+            color: #a61b32;
+            font-weight: 700;
+        }
+
+        .home-card h3 {
+            margin: 18px 0 8px;
+            font-size: 20px;
+        }
+
+        .home-card p {
+            flex: 1;
+            margin: 0 0 22px;
+            color: #71636a;
+        }
+
+        .home-card a {
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .home-card a:hover {
+            text-decoration: underline;
+        }
+
+        .home-footer {
+            padding: 22px;
+            border-top: 1px solid #e8dce0;
+            background: white;
+            color: #71636a;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        @media (max-width: 760px) {
+            .home-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .home-hero {
+                padding: 30px 24px;
+            }
+
+            .home-main {
+                margin: 25px auto;
+            }
+        }
+    </style>
 </head>
 
-<body>
+<body class="home-page">
+    <header class="topbar">
+        <div class="topbar-inner">
+            <a class="brand" th:href="@{/}">
+                Quản Lý Bán Hàng
+            </a>
 
-<header>
-    <h1>BÁN HÀNG TRỰC TUYẾN</h1>
-</header>
+            <nav aria-label="Điều hướng chính">
+                <a th:href="@{/}" aria-current="page">Trang chủ</a>
+                <a th:href="@{/categories}">Danh mục</a>
+                <a th:href="@{/products}">Sản phẩm</a>
+            </nav>
+        </div>
+    </header>
 
-<nav>
-    <a th:href="@{/products}">Tất cả</a>
-    <a th:href="@{/products(categoryId=1)}">Điện thoại di động</a>
-    <a th:href="@{/products(categoryId=2)}">Máy tính bảng</a>
-</nav>
+    <main class="home-main">
+        <section class="home-hero" aria-labelledby="welcome-title">
+            <span class="home-tag">SALEAPP · TRANG CHỦ</span>
 
-<main>
-    <h2>Chào mừng đến với cửa hàng</h2>
-    <p>Chọn một danh mục để xem sản phẩm.</p>
-</main>
+            <h1 id="welcome-title">
+                Quản lý cửa hàng<br>đơn giản mỗi ngày.
+            </h1>
 
+            <p>
+                Chào mừng bạn trở lại! Xem danh sách sản phẩm,
+                cập nhật giá bán và sắp xếp danh mục ngay tại đây.
+            </p>
+
+            <div class="home-actions">
+                <a class="btn" th:href="@{/products}">
+                    Xem sản phẩm →
+                </a>
+
+                <a class="btn home-secondary"
+                   th:href="@{/products/add}">
+                    + Thêm sản phẩm
+                </a>
+            </div>
+        </section>
+
+        <section aria-labelledby="quick-access-title">
+            <h2 class="home-section-title" id="quick-access-title">
+                Truy cập nhanh
+            </h2>
+
+            <div class="home-grid">
+                <article class="home-card">
+                    <span class="home-number" aria-hidden="true">01</span>
+                    <h3>Quản lý sản phẩm</h3>
+                    <p>
+                        Tìm kiếm, lọc sản phẩm và chỉnh sửa
+                        tên, giá bán hoặc mô tả.
+                    </p>
+                    <a th:href="@{/products}">
+                        Mở danh sách sản phẩm →
+                    </a>
+                </article>
+
+                <article class="home-card">
+                    <span class="home-number" aria-hidden="true">02</span>
+                    <h3>Quản lý danh mục</h3>
+                    <p>
+                        Thêm và cập nhật danh mục để phân loại
+                        sản phẩm trong cửa hàng.
+                    </p>
+                    <a th:href="@{/categories}">
+                        Mở danh sách danh mục →
+                    </a>
+                </article>
+
+                <article class="home-card">
+                    <span class="home-number" aria-hidden="true">03</span>
+                    <h3>Thêm sản phẩm mới</h3>
+                    <p>
+                        Nhập thông tin, giá bán và chọn danh mục
+                        cho sản phẩm mới.
+                    </p>
+                    <a th:href="@{/products/add}">
+                        Thêm sản phẩm ngay →
+                    </a>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="home-footer">
+        SaleApp · Hệ thống quản lý bán hàng
+    </footer>
 </body>
 </html>
